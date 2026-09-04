@@ -1,181 +1,675 @@
-import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
-import { Logo } from './Logo';
+/* ==========================================================================
+   MOMIQ — CONCEPTUAL SKETCH DESIGN SYSTEM
+   Artistic, Architectural Draftsman & Maternal Journal Aesthetic
+   ========================================================================== */
 
-interface HeaderProps {
-  onOpenTracker?: () => void;
-  onOpenAuth?: (view: 'login' | 'signup') => void;
-  onGuestLogin?: () => void;
-  showAuthButtons?: boolean;
+:root {
+  /* Canvas & Paper Tones */
+  --sketch-bg:             #FAF7F0;
+  --sketch-paper:          #FFFDF9;
+  --sketch-paper-tint:     #F4EFE6;
+  --sketch-paper-dark:     #EAE3D6;
+
+  /* Pencil & Ink Linework */
+  --sketch-ink:            #282521;
+  --sketch-graphite:       #4E483F;
+  --sketch-lead:           #857D71;
+  --sketch-lead-light:     #B8B0A2;
+  --sketch-grid-line:      rgba(133, 125, 113, 0.18);
+
+  /* Watercolor & Highlighter Washes */
+  --sketch-terracotta:      #D97757;
+  --sketch-terracotta-wash: #FBF0EB;
+  --sketch-sage:            #5F7D5C;
+  --sketch-sage-wash:       #EFF5EE;
+  --sketch-blueprint:       #375A7F;
+  --sketch-blueprint-wash:  #EBF2F8;
+  --sketch-ochre:           #D49B53;
+  --sketch-ochre-wash:      #FBF5EB;
+  --sketch-rose:            #C95A79;
+  --sketch-rose-wash:       #FDF0F4;
+  --sketch-lavender:        #7C6898;
+  --sketch-lavender-wash:   #F3EFF9;
+
+  /* Typography Stacks */
+  --font-handwriting:       'Architects Daughter', 'Caveat', cursive, sans-serif;
+  --font-script:            'Caveat', cursive, sans-serif;
+  --font-heading:           'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  --font-body:              'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Classic Hand-drawn Sketch Border Radii */
+  --radius-sketch-lg:       255px 15px 225px 15px/15px 225px 15px 255px;
+  --radius-sketch-md:       180px 10px 160px 12px/12px 170px 10px 180px;
+  --radius-sketch-sm:       120px 8px 110px 8px/8px 110px 8px 120px;
+  --radius-pill:            9999px;
 }
 
-const navItems = [
-  { label: 'Home', id: 'home' },
-  { label: 'Features', id: 'features' },
-  { label: 'Research', id: 'research' },
-  { label: 'Services', id: 'services' },
-  { label: 'Pricing', id: 'pricing' },
-  { label: 'About', id: 'about' },
-  { label: 'FAQ', id: 'faq' },
-];
+/* Base Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-export function Header({ onOpenAuth, onGuestLogin, showAuthButtons = false }: HeaderProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-body);
+  color: var(--sketch-ink);
+  background-color: var(--sketch-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+body {
+  min-height: 100vh;
+  background-color: var(--sketch-bg);
+  background-image: 
+    radial-gradient(var(--sketch-grid-line) 1px, transparent 1px),
+    radial-gradient(var(--sketch-grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+  color: var(--sketch-ink);
+  line-height: 1.55;
+  font-size: 15px;
+  overflow-x: hidden;
+  width: 100%;
+}
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setMobileOpen(false);
-  };
+/* Responsive Media Safeguards */
+img, svg, video, canvas {
+  max-width: 100%;
+  height: auto;
+}
 
-  return (
-    <header
-      style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 50,
-        background: 'rgba(250, 247, 240, 0.94)',
-        backdropFilter: 'blur(8px)',
-        borderBottom: '1.8px solid var(--sketch-ink)',
-        boxShadow: scrolled ? '0 3px 0px rgba(40, 37, 33, 0.12)' : 'none',
-        transition: 'box-shadow 0.2s ease',
-      }}
-    >
-      <div className="container mx-auto px-4 lg:px-8">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 68 }}>
+pre, code {
+  max-width: 100%;
+  overflow-x: auto;
+  word-break: break-word;
+}
 
-          {/* Logo */}
-          <div onClick={() => scrollTo('home')} style={{ cursor: 'pointer' }}>
-            <Logo />
-          </div>
+/* Modern Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--sketch-ink);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
 
-          {/* Desktop Nav */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 6 }} className="hidden lg:flex">
-            {navItems.map((n) => (
-              <button
-                key={n.id}
-                onClick={() => scrollTo(n.id)}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: 'var(--sketch-graphite)',
-                  fontWeight: 600,
-                  fontSize: '0.86rem',
-                  fontFamily: 'var(--font-heading)',
-                  letterSpacing: '0.01em',
-                  cursor: 'pointer',
-                  padding: '6px 14px',
-                  borderRadius: 'var(--radius-sketch-sm)',
-                  transition: 'all 0.15s ease',
-                }}
-                onMouseEnter={(e) => {
-                  const el = e.currentTarget;
-                  el.style.color = 'var(--sketch-ink)';
-                  el.style.background = 'var(--sketch-paper-tint)';
-                }}
-                onMouseLeave={(e) => {
-                  const el = e.currentTarget;
-                  el.style.color = 'var(--sketch-graphite)';
-                  el.style.background = 'transparent';
-                }}
-              >
-                {n.label}
-              </button>
-            ))}
-          </nav>
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
-          {/* Auth buttons (desktop) */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            {showAuthButtons && (
-              <>
-                <button
-                  onClick={() => onOpenAuth?.('login')}
-                  className="sketch-btn-primary auth-btn-desktop"
-                  style={{ padding: '8px 18px', fontSize: '0.82rem' }}
-                >
-                  Log In
-                </button>
-                <button
-                  onClick={() => onGuestLogin?.()}
-                  className="sketch-btn-secondary auth-btn-desktop"
-                  style={{ padding: '8px 16px', fontSize: '0.82rem' }}
-                >
-                  Guest Demo
-                </button>
-              </>
-            )}
+button, input, select, textarea {
+  font-family: inherit;
+}
 
-            {/* Hamburger — hidden on lg+ */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="sketch-btn-secondary lg:hidden"
-              style={{ padding: '7px 10px' }}
-              aria-label="Toggle menu"
-            >
-              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
-            </button>
-          </div>
-        </div>
+/* ==========================================================================
+   SKETCH DESIGN UTILITIES
+   ========================================================================== */
 
-        {/* Mobile Nav */}
-        {mobileOpen && (
-          <div
-            style={{
-              borderTop: '1.5px dashed var(--sketch-lead)',
-              padding: '16px 0 20px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 4,
-            }}
-            className="lg:hidden"
-          >
-            {navItems.map((n) => (
-              <button
-                key={n.id}
-                onClick={() => scrollTo(n.id)}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: 'var(--sketch-ink)',
-                  fontWeight: 600,
-                  fontSize: '0.92rem',
-                  fontFamily: 'var(--font-heading)',
-                  cursor: 'pointer',
-                  padding: '10px 12px',
-                  textAlign: 'left',
-                  borderRadius: 'var(--radius-sketch-sm)',
-                }}
-              >
-                {n.label}
-              </button>
-            ))}
-            {showAuthButtons && (
-              <div style={{ display: 'flex', gap: 10, paddingTop: 12, borderTop: '1.5px dashed var(--sketch-lead-light)' }}>
-                <button
-                  onClick={() => { onOpenAuth?.('login'); setMobileOpen(false); }}
-                  className="sketch-btn-primary"
-                  style={{ flex: 1 }}
-                >
-                  Log In
-                </button>
-                <button
-                  onClick={() => { onGuestLogin?.(); setMobileOpen(false); }}
-                  className="sketch-btn-secondary"
-                  style={{ flex: 1 }}
-                >
-                  Guest Demo
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </header>
+/* Hand-drawn Cards */
+.sketch-card {
+  background: var(--sketch-paper);
+  border: 1.8px solid var(--sketch-ink);
+  border-radius: var(--radius-sketch-md);
+  box-shadow: 3px 3.5px 0px var(--sketch-ink);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+}
+
+.sketch-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 6px 0px var(--sketch-ink);
+}
+
+.sketch-card-static {
+  background: var(--sketch-paper);
+  border: 1.8px solid var(--sketch-ink);
+  border-radius: var(--radius-sketch-md);
+  box-shadow: 3px 3px 0px var(--sketch-ink);
+  position: relative;
+}
+
+.sketch-card-terracotta {
+  background: var(--sketch-terracotta-wash);
+  border: 1.8px solid var(--sketch-ink);
+  border-radius: var(--radius-sketch-md);
+  box-shadow: 3px 3px 0px var(--sketch-ink);
+}
+
+.sketch-card-sage {
+  background: var(--sketch-sage-wash);
+  border: 1.8px solid var(--sketch-ink);
+  border-radius: var(--radius-sketch-md);
+  box-shadow: 3px 3px 0px var(--sketch-ink);
+}
+
+.sketch-card-blueprint {
+  background: var(--sketch-blueprint-wash);
+  border: 1.8px solid var(--sketch-ink);
+  border-radius: var(--radius-sketch-md);
+  box-shadow: 3px 3px 0px var(--sketch-ink);
+}
+
+.sketch-card-ochre {
+  background: var(--sketch-ochre-wash);
+  border: 1.8px solid var(--sketch-ink);
+  border-radius: var(--radius-sketch-md);
+  box-shadow: 3px 3px 0px var(--sketch-ink);
+}
+
+.sketch-card-rose {
+  background: var(--sketch-rose-wash);
+  border: 1.8px solid var(--sketch-ink);
+  border-radius: var(--radius-sketch-md);
+  box-shadow: 3px 3px 0px var(--sketch-ink);
+}
+
+/* Hand-drawn Buttons */
+.sketch-btn-primary {
+  background: var(--sketch-terracotta);
+  color: #ffffff;
+  border: 1.8px solid var(--sketch-ink);
+  border-radius: var(--radius-sketch-sm);
+  box-shadow: 3px 3px 0px var(--sketch-ink);
+  padding: 10px 22px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.sketch-btn-primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--sketch-ink);
+  background: #C86645;
+}
+
+.sketch-btn-primary:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1.5px 1.5px 0px var(--sketch-ink);
+}
+
+.sketch-btn-dark {
+  background: var(--sketch-ink);
+  color: var(--sketch-paper);
+  border: 1.8px solid var(--sketch-ink);
+  border-radius: var(--radius-sketch-sm);
+  box-shadow: 3px 3px 0px var(--sketch-lead);
+  padding: 10px 22px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.sketch-btn-dark:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--sketch-lead);
+}
+
+.sketch-btn-secondary {
+  background: var(--sketch-paper);
+  color: var(--sketch-ink);
+  border: 1.8px solid var(--sketch-ink);
+  border-radius: var(--radius-sketch-sm);
+  box-shadow: 3px 3px 0px var(--sketch-ink);
+  padding: 10px 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.sketch-btn-secondary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--sketch-ink);
+  background: var(--sketch-paper-tint);
+}
+
+.sketch-btn-ghost {
+  background: transparent;
+  color: var(--sketch-graphite);
+  border: 1.5px dashed var(--sketch-lead);
+  border-radius: var(--radius-sketch-sm);
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.sketch-btn-ghost:hover {
+  border-style: solid;
+  border-color: var(--sketch-ink);
+  color: var(--sketch-ink);
+  background: rgba(255, 255, 255, 0.6);
+  transform: translate(-1px, -1px);
+}
+
+/* Badges & Tags */
+.sketch-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--sketch-paper);
+  color: var(--sketch-ink);
+  border: 1.5px solid var(--sketch-ink);
+  border-radius: var(--radius-sketch-sm);
+  box-shadow: 2px 2px 0px var(--sketch-ink);
+  padding: 4px 12px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sketch-badge-terracotta {
+  background: var(--sketch-terracotta-wash);
+  color: var(--sketch-terracotta);
+  border: 1.5px solid var(--sketch-terracotta);
+  box-shadow: 2px 2px 0px rgba(217, 119, 87, 0.4);
+}
+
+.sketch-badge-sage {
+  background: var(--sketch-sage-wash);
+  color: var(--sketch-sage);
+  border: 1.5px solid var(--sketch-sage);
+  box-shadow: 2px 2px 0px rgba(95, 125, 92, 0.4);
+}
+
+.sketch-badge-blueprint {
+  background: var(--sketch-blueprint-wash);
+  color: var(--sketch-blueprint);
+  border: 1.5px solid var(--sketch-blueprint);
+  box-shadow: 2px 2px 0px rgba(55, 90, 127, 0.4);
+}
+
+/* Handwritten Text & Marginalia */
+.sketch-handwriting {
+  font-family: var(--font-handwriting);
+  letter-spacing: 0.02em;
+}
+
+.sketch-note {
+  font-family: var(--font-handwriting);
+  color: var(--sketch-graphite);
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+/* Washi Tape / Tape Strip Accent */
+.sketch-tape {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 90px;
+  height: 20px;
+  background: rgba(224, 214, 196, 0.75);
+  border-left: 2px dashed rgba(165, 155, 138, 0.7);
+  border-right: 2px dashed rgba(165, 155, 138, 0.7);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.sketch-tape-corner {
+  position: absolute;
+  top: -8px;
+  right: 18px;
+  transform: rotate(18deg);
+  width: 65px;
+  height: 18px;
+  background: rgba(230, 205, 185, 0.8);
+  border-left: 1.5px dashed rgba(170, 140, 120, 0.6);
+  border-right: 1.5px dashed rgba(170, 140, 120, 0.6);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Technical Drafting Crosshairs */
+.sketch-crosshair {
+  position: relative;
+}
+.sketch-crosshair::before {
+  content: "+";
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  color: var(--sketch-lead);
+  pointer-events: none;
+}
+.sketch-crosshair::after {
+  content: "+";
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  color: var(--sketch-lead);
+  pointer-events: none;
+}
+
+/* Pencil Hatching Texture */
+.sketch-hatching {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 6px,
+    rgba(40, 37, 33, 0.05) 6px,
+    rgba(40, 37, 33, 0.05) 7.5px
   );
+}
+
+/* Hand-drawn inputs */
+.sketch-input {
+  background: var(--sketch-paper);
+  border: 1.8px solid var(--sketch-ink);
+  border-radius: var(--radius-sketch-sm);
+  box-shadow: 2.5px 2.5px 0px var(--sketch-ink);
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  color: var(--sketch-ink);
+  outline: none;
+  transition: transform 0.1s, box-shadow 0.1s, border-color 0.1s;
+  width: 100%;
+}
+
+.sketch-input:focus {
+  border-color: var(--sketch-terracotta);
+  box-shadow: 3.5px 3.5px 0px var(--sketch-terracotta);
+}
+
+/* Hand-drawn Dividers */
+.sketch-divider {
+  border: none;
+  height: 2px;
+  background-image: repeating-linear-gradient(to right, var(--sketch-ink) 0, var(--sketch-ink) 8px, transparent 8px, transparent 12px);
+  margin: 32px 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE UTILITY SYSTEM
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px)  { .container { max-width: 640px; } }
+@media (min-width: 768px)  { .container { max-width: 768px; } }
+@media (min-width: 1024px) { .container { max-width: 1024px; padding-left: 2rem; padding-right: 2rem; } }
+@media (min-width: 1280px) { .container { max-width: 1280px; } }
+
+/* Grid utilities */
+.grid { display: grid; }
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+@media (min-width: 640px) {
+  .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 768px) {
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* Flex utilities */
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.justify-end { justify-content: flex-end; }
+.flex-1 { flex: 1 1 0%; }
+.flex-shrink-0 { flex-shrink: 0; }
+
+/* Spacing gaps */
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.gap-5 { gap: 1.25rem; }
+.gap-6 { gap: 1.5rem; }
+.gap-8 { gap: 2rem; }
+.gap-10 { gap: 2.5rem; }
+.gap-12 { gap: 3rem; }
+
+/* Display & Visibility */
+.hidden { display: none !important; }
+.block { display: block; }
+/* Auth buttons — hidden on mobile, shown on md+ */
+.auth-btn-desktop { display: none !important; }
+@media (min-width: 768px) {
+  .auth-btn-desktop { display: inline-flex !important; }
+  .md\:block { display: block !important; }
+  .md\:hidden { display: none !important; }
+  .md\:flex { display: flex !important; }
+}
+@media (min-width: 1024px) {
+  .lg\:flex { display: flex !important; }
+  .lg\:hidden { display: none !important; }
+  .lg\:block { display: block !important; }
+}
+
+/* Header Specific Navigation Rules */
+.header-desktop-nav {
+  display: none !important;
+}
+.header-hamburger-btn {
+  display: inline-flex !important;
+}
+@media (min-width: 1024px) {
+  .header-desktop-nav {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+  }
+  .header-hamburger-btn {
+    display: none !important;
+  }
+}
+
+/* Common sizing & spacing */
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.min-h-screen { min-height: 100vh; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.inset-0 { inset: 0; }
+.overflow-hidden { overflow: hidden; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.uppercase { text-transform: uppercase; }
+.capitalize { text-transform: capitalize; }
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.rounded-full { border-radius: 9999px; }
+
+/* Padding & Margin utilities */
+.p-2 { padding: 0.5rem; }
+.p-3 { padding: 0.75rem; }
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+.py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+.py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+.py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+.py-16 { padding-top: 4rem; padding-bottom: 4rem; }
+.py-20 { padding-top: 5rem; padding-bottom: 5rem; }
+.px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+.px-8 { padding-left: 2rem; padding-right: 2rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mb-12 { margin-bottom: 3rem; }
+.space-y-4 > * + * { margin-top: 1rem; }
+.space-y-6 > * + * { margin-top: 1.5rem; }
+
+/* Page transitions & animations */
+@keyframes sketchFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-transition {
+  animation: sketchFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom scrollbar in pencil sketch style */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--sketch-paper-tint);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--sketch-lead);
+  border: 1px solid var(--sketch-ink);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sketch-graphite);
+}
+
+/* ==========================================================================
+   MOBILE & TOUCH RESPONSIVE ENHANCEMENTS
+   ========================================================================== */
+
+/* Dashboard Layout Responsiveness */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background: var(--sketch-bg);
+  font-family: var(--font-body);
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.dashboard-main {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  margin-left: 0;
+  transition: margin-left 0.25s ease;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 14px 60px;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-main {
+    padding: 24px 24px 60px;
+  }
+}
+
+.dashboard-mobile-header {
+  position: sticky;
+  top: 0;
+  z-index: 35;
+  width: 100%;
+  background: rgba(250, 247, 240, 0.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1.8px solid var(--sketch-ink);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-mobile-header {
+    display: none;
+  }
+}
+
+/* Safe Table & Overflow Wrappers */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Small screen padding and sizing overrides */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
+  }
+
+  .py-12 { padding-top: 2.25rem; padding-bottom: 2.25rem; }
+  .py-16 { padding-top: 2.75rem; padding-bottom: 2.75rem; }
+  .py-20 { padding-top: 3.25rem; padding-bottom: 3.25rem; }
+
+  .sketch-btn-primary,
+  .sketch-btn-secondary,
+  .sketch-btn-dark {
+    padding: 9px 16px;
+    font-size: 0.84rem;
+  }
+
+  .sketch-card,
+  .sketch-card-static {
+    box-shadow: 2.5px 2.5px 0px var(--sketch-ink);
+  }
+
+  .sketch-card:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3.5px 4px 0px var(--sketch-ink);
+  }
+}
+
+/* Touch targets optimization */
+@media (pointer: coarse) {
+  button, a {
+    min-height: 38px;
+  }
 }
