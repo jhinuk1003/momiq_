@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Activity, Heart, Bell, Calendar, Baby,
   MessageCircle, Users, BookOpen, Music,
@@ -26,6 +26,16 @@ export function Sidebar({
   onLogout,
 }: SidebarProps) {
   const [confirmLogout, setConfirmLogout] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 1024 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const items = [
     { icon: Heart, label: 'Dashboard', action: 'dashboard', path: '/dashboard' },
     { icon: Calendar, label: 'Calendar', action: 'calendar', path: '/dashboard/calendar' },
@@ -47,7 +57,8 @@ export function Sidebar({
     return currentView === segment || currentView === item.path;
   };
 
-  const W = sidebarOpen ? 256 : 74;
+  const W = isMobile ? 280 : (sidebarOpen ? 256 : 74);
+  const translateX = isMobile ? (sidebarOpen ? 0 : -320) : 0;
 
   return (
     <>
@@ -57,29 +68,30 @@ export function Sidebar({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/40 z-30 lg:hidden"
+            className="fixed inset-0 bg-black/40 z-40 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
       </AnimatePresence>
 
       <motion.aside
-        layout
-        animate={{ width: W }}
-        transition={{ type: 'spring', stiffness: 320, damping: 32 }}
+        layout={!isMobile}
+        animate={{ width: W, x: translateX }}
+        transition={{ type: 'spring', stiffness: 340, damping: 34 }}
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
           height: '100vh',
-          zIndex: 40,
+          zIndex: isMobile ? 50 : 40,
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
           background: 'var(--sketch-paper)',
           borderRight: '2px solid var(--sketch-ink)',
-          boxShadow: '3px 0 0 0 rgba(40, 37, 33, 0.08)',
+          boxShadow: isMobile ? '4px 0 16px rgba(40, 37, 33, 0.25)' : '3px 0 0 0 rgba(40, 37, 33, 0.08)',
           width: W,
+          maxWidth: isMobile ? '85vw' : undefined,
         }}
       >
         {/* Brand */}
@@ -113,7 +125,7 @@ export function Sidebar({
             >
               ♥
             </div>
-            {sidebarOpen && (
+            {(sidebarOpen || isMobile) && (
               <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -135,14 +147,15 @@ export function Sidebar({
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="sketch-btn-ghost"
             style={{ padding: '4px 6px', borderRadius: 'var(--radius-sketch-sm)' }}
+            aria-label={isMobile ? "Close menu" : (sidebarOpen ? "Collapse sidebar" : "Expand sidebar")}
           >
-            {sidebarOpen ? <ChevronLeft size={16} /> : <Menu size={16} />}
+            {isMobile ? <X size={18} /> : (sidebarOpen ? <ChevronLeft size={16} /> : <Menu size={16} />)}
           </button>
         </div>
 
         {/* User Card */}
         <AnimatePresence>
-          {sidebarOpen && (
+          {(sidebarOpen || isMobile) && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -168,18 +181,35 @@ export function Sidebar({
                     justifyContent: 'center',
                     fontFamily: 'var(--font-heading)',
                     fontWeight: 700,
-                    fontSize: '1.1rem',
+                    fontSize: '1rem',
                     flexShrink: 0,
                   }}
                 >
                   {userName.charAt(0).toUpperCase()}
                 </div>
-                <div>
-                  <p style={{ fontWeight: 700, color: 'var(--sketch-ink)', fontSize: '0.9rem', margin: 0 }}>
+                <div style={{ overflow: 'hidden' }}>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontWeight: 700,
+                      fontSize: '0.88rem',
+                      color: 'var(--sketch-ink)',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                      overflow: 'hidden',
+                    }}
+                  >
                     {userName}
                   </p>
-                  <p className="sketch-handwriting" style={{ color: 'var(--sketch-graphite)', fontSize: '0.82rem', margin: 0 }}>
-                    Week {pregnancyWeek} · Active Spec
+                  <p
+                    className="sketch-handwriting"
+                    style={{
+                      margin: 0,
+                      fontSize: '0.78rem',
+                      color: 'var(--sketch-lead)',
+                    }}
+                  >
+                    Week {pregnancyWeek} · Trimester {Math.ceil(pregnancyWeek / 13)}
                   </p>
                 </div>
               </div>
@@ -202,8 +232,8 @@ export function Sidebar({
                   width: '100%',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: sidebarOpen ? 12 : 0,
-                  justifyContent: sidebarOpen ? 'flex-start' : 'center',
+                  gap: (sidebarOpen || isMobile) ? 12 : 0,
+                  justifyContent: (sidebarOpen || isMobile) ? 'flex-start' : 'center',
                   padding: '10px 12px',
                   marginBottom: 5,
                   cursor: 'pointer',
@@ -233,7 +263,7 @@ export function Sidebar({
                 }}
               >
                 <item.icon size={18} style={{ flexShrink: 0 }} />
-                {sidebarOpen && <span>{item.label}</span>}
+                {(sidebarOpen || isMobile) && <span>{item.label}</span>}
               </button>
             );
           })}
@@ -244,7 +274,7 @@ export function Sidebar({
           {confirmLogout ? (
             /* Inline confirm row */
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 8px' }}>
-              {sidebarOpen && (
+              {(sidebarOpen || isMobile) && (
                 <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--sketch-ink)', flex: 1, whiteSpace: 'nowrap' }}>
                   Sure?
                 </span>
@@ -298,15 +328,15 @@ export function Sidebar({
                 width: '100%',
                 display: 'flex',
                 alignItems: 'center',
-                gap: sidebarOpen ? 12 : 0,
-                justifyContent: sidebarOpen ? 'flex-start' : 'center',
+                gap: (sidebarOpen || isMobile) ? 12 : 0,
+                justifyContent: (sidebarOpen || isMobile) ? 'flex-start' : 'center',
                 padding: '10px 12px',
                 color: 'var(--sketch-terracotta)',
                 borderColor: 'transparent',
               }}
             >
               <LogOut size={18} />
-              {sidebarOpen && <span>Logout</span>}
+              {(sidebarOpen || isMobile) && <span>Logout</span>}
             </button>
           )}
         </div>
