@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <!-- Subtle pencil filter / shadow -->
+    <filter id="sketch-shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="3" dy="3.5" stdDeviation="0" flood-color="#282521" flood-opacity="1" />
+    </filter>
+  </defs>
+
+  <!-- Hand-drawn style badge with hard sketch shadow -->
+  <rect
+    x="6"
+    y="6"
+    width="48"
+    height="48"
+    rx="10"
+    ry="10"
+    fill="#FBF0EB"
+    stroke="#282521"
+    stroke-width="3"
+    stroke-linejoin="round"
+    filter="url(#sketch-shadow)"
+  />
+
+  <!-- Maternal Heart Icon in MomiQ Terracotta -->
+  <g transform="translate(14, 14) scale(1.5)">
+    <!-- Heart Path with warm linework and wash -->
+    <path
+      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+      fill="#D97757"
+      fill-opacity="0.18"
+      stroke="#D97757"
+      stroke-width="2.4"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </g>
+</svg>
