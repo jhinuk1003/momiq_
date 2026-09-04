@@ -472,20 +472,38 @@ button, input, select, textarea {
 .gap-12 { gap: 3rem; }
 
 /* Display & Visibility */
-.hidden { display: none; }
+.hidden { display: none !important; }
 .block { display: block; }
 /* Auth buttons — hidden on mobile, shown on md+ */
-.auth-btn-desktop { display: none; }
+.auth-btn-desktop { display: none !important; }
 @media (min-width: 768px) {
-  .auth-btn-desktop { display: inline-flex; }
-  .md\:block { display: block; }
-  .md\:hidden { display: none; }
-  .md\:flex { display: flex; }
+  .auth-btn-desktop { display: inline-flex !important; }
+  .md\:block { display: block !important; }
+  .md\:hidden { display: none !important; }
+  .md\:flex { display: flex !important; }
 }
 @media (min-width: 1024px) {
-  .lg\:flex { display: flex; }
-  .lg\:hidden { display: none; }
-  .lg\:block { display: block; }
+  .lg\:flex { display: flex !important; }
+  .lg\:hidden { display: none !important; }
+  .lg\:block { display: block !important; }
+}
+
+/* Header Specific Navigation Rules */
+.header-desktop-nav {
+  display: none !important;
+}
+.header-hamburger-btn {
+  display: inline-flex !important;
+}
+@media (min-width: 1024px) {
+  .header-desktop-nav {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+  }
+  .header-hamburger-btn {
+    display: none !important;
+  }
 }
 
 /* Common sizing & spacing */
